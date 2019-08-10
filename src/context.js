@@ -1,20 +1,42 @@
 import React, { Component } from 'react';
-import { storeProducts, detailProduct } from './data';
+import { storeProducts } from './data';
 
 const ProductContext = React.createContext();
 
 class ProductProvider extends Component {
   state = {
-    products: storeProducts,
-    detailProduct: detailProduct
+    products: [],
+    detailProduct: {}
   };
 
-  handleDetail = () => {
-    console.log('hello from detail!');
+  componentDidMount = () => {
+    this.setProducts();
+  };
+  setProducts = () => {
+    let products = [];
+
+    storeProducts.forEach(item => {
+      const singleItem = { ...item };
+      products.push(singleItem);
+    });
+
+    this.setState(() => ({ products }));
   };
 
-  addToCart = () => {
-    console.log('hello from add to cart!');
+  getItem = id => {
+    const product = this.state.products.find(product => product.id === id);
+    return product;
+  };
+
+  handleDetail = id => {
+    const product = this.getItem(id);
+    this.setState(() => ({
+      detailProduct: product
+    }));
+  };
+
+  addToCart = id => {
+    console.log(`Product ID is: ${id}`);
   };
 
   render() {
