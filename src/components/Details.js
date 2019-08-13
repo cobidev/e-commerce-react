@@ -16,6 +16,7 @@ const Details = () => {
           price,
           inCart
         } = value.detailProduct;
+
         return (
           <article className="container py-5">
             {/* title */}
@@ -45,13 +46,16 @@ const Details = () => {
                 <p className="text-muted lead">{info}</p>
                 {/* buttons */}
                 <div>
-                  <Link to="/">
+                  <Link to="/" onClick={() => value.handleCloseDetail()}>
                     <ButtonContainer>Back to products</ButtonContainer>
                   </Link>
                   <ButtonContainer
                     cart
                     disabled={inCart ? true : false}
-                    onClick={() => value.addToCart(id)}>
+                    onClick={() => {
+                      value.addToCart(id);
+                      value.openModal(id);
+                    }}>
                     {inCart ? 'In Cart' : 'Add to Cart'}
                   </ButtonContainer>
                 </div>

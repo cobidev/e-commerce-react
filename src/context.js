@@ -9,7 +9,9 @@ class ProductProvider extends Component {
   state = {
     products: [],
     detailProduct: {},
-    cart: []
+    cart: [],
+    modalOpen: false,
+    modalProduct: {}
   };
 
   componentDidMount = () => {
@@ -17,25 +19,24 @@ class ProductProvider extends Component {
   };
   setProducts = () => {
     let products = [];
-
     storeProducts.forEach(item => {
       const singleItem = { ...item };
       products.push(singleItem);
     });
-
     this.setState(() => ({ products }));
   };
 
-  handleDetail = id => {
-    const product = this.getItem(id);
-    this.setState(() => ({
-      detailProduct: product
-    }));
-  };
   getItem = id => {
     const product = this.state.products.find(product => product.id === id);
     return product;
   };
+
+  handleDetail = id => {
+    const product = this.getItem(id);
+    this.setState(() => ({ detailProduct: product }));
+  };
+
+  handleCloseDetail = () => this.setState(() => ({ detailProduct: {} }));
 
   addToCart = id => {
     // let tempProducts = [...this.state.products];
@@ -51,6 +52,19 @@ class ProductProvider extends Component {
     }));
   };
 
+  openModal = id => {
+    const product = this.getItem(id);
+    this.setState(() => ({ modalProduct: product, modalOpen: true }));
+  };
+
+  closeModal = () => {
+    this.setState(() => ({
+      modalProduct: {},
+      detailProduct: {},
+      modalOpen: false
+    }));
+  };
+
   // Render HOC component that holds the state as props, to provide the values through children components
   render() {
     return (
@@ -58,7 +72,10 @@ class ProductProvider extends Component {
         value={{
           ...this.state,
           handleDetail: this.handleDetail,
-          addToCart: this.addToCart
+          handleCloseDetail: this.handleCloseDetail,
+          addToCart: this.addToCart,
+          openModal: this.openModal,
+          closeModal: this.closeModal
         }}>
         {this.props.children}
       </ProductContext.Provider>

@@ -84,7 +84,10 @@ const Product = ({ product }) => {
                 <button
                   className="cart-btn"
                   disabled={product.inCart ? true : false}
-                  onClick={() => value.addToCart(product.id)}>
+                  onClick={() => {
+                    value.addToCart(product.id);
+                    value.openModal(product.id);
+                  }}>
                   {product.inCart ? (
                     <p className="text-capitalize mb-0" disabled>
                       In Cart
