@@ -11,7 +11,10 @@ class ProductProvider extends Component {
     detailProduct: {},
     cart: [],
     modalOpen: false,
-    modalProduct: {}
+    modalProduct: {},
+    cartSubTotal: 0,
+    cartTax: 0,
+    cartTotal: 0
   };
 
   componentDidMount = () => {
@@ -65,6 +68,22 @@ class ProductProvider extends Component {
     }));
   };
 
+  incrementQuantity = id => {
+    console.log('This is increment method');
+  };
+
+  decrementQuantity = id => {
+    console.log('This is decrement method');
+  };
+
+  removeItem = id => {
+    console.log('Item removed');
+  };
+
+  clearCart = () => {
+    console.log('cart was cleared');
+  };
+
   // Render HOC component that holds the state as props, to provide the values through children components
   render() {
     return (
@@ -75,7 +94,11 @@ class ProductProvider extends Component {
           handleCloseDetail: this.handleCloseDetail,
           addToCart: this.addToCart,
           openModal: this.openModal,
-          closeModal: this.closeModal
+          closeModal: this.closeModal,
+          incrementQuantity: this.incrementQuantity,
+          decrementQuantity: this.decrementQuantity,
+          removeItem: this.removeItem,
+          clearCart: this.clearCart
         }}>
         {this.props.children}
       </ProductContext.Provider>
