@@ -24,3 +24,25 @@ body {
 .text-bright {
   color: var(--light-blue);
 }
+
+.btn-black {
+  background: transparent;
+  text-transform: capitalize;
+  font-size: 0.8rem !important;
+  color: var(--main-dark);
+  border-radius: 0 !important;
+  border: 0.1rem solid var(--main-dark) !important;
+  cursor: pointer;
+  transition: all ease 0.3s;
+}
+
+.btn-black:hover {
+  background: var(--main-dark);
+  color: var(--main-white) !important;
+}
+
+.cart-icon {
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--main-yellow);
+}
