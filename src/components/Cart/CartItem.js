@@ -52,7 +52,8 @@ const CartItem = ({ item, value }) => {
       </article>
       {/* Total */}
       <article className="col-10 mx-auto col-lg-2">
-        <strong>item total: ${total}</strong>
+        <span className="d-sm-none">Item total: </span>
+        <strong>${total}</strong>
       </article>
     </div>
   );
