@@ -9,12 +9,12 @@ class ProductProvider extends Component {
   state = {
     products: [],
     detailProduct: {},
-    cart: storeProducts,
+    cart: [],
     modalOpen: false,
     modalProduct: {},
-    cartSubTotal: 30,
-    cartTax: 20,
-    cartTotal: 50
+    cartSubTotal: 0,
+    cartTax: 0,
+    cartTotal: 0
   };
 
   componentDidMount = () => {
@@ -42,17 +42,18 @@ class ProductProvider extends Component {
   handleCloseDetail = () => this.setState(() => ({ detailProduct: {} }));
 
   addToCart = id => {
-    // let tempProducts = [...this.state.products];
-    // const index = tempProducts.indexOf(this.getItem(id));
     const product = this.getItem(id);
     product.inCart = true;
     product.count++;
     const price = product.price;
     product.total = price;
 
-    this.setState(() => ({
-      cart: [...this.state.cart, product]
-    }));
+    this.setState(
+      () => ({
+        cart: [...this.state.cart, product]
+      }),
+      () => this.addTotals()
+    );
   };
 
   openModal = id => {
@@ -77,11 +78,52 @@ class ProductProvider extends Component {
   };
 
   removeItem = id => {
-    console.log('Item removed');
+    let tempCart = [...this.state.cart];
+    let tempProducts = [...this.state.products];
+
+    tempCart = tempCart.filter(product => product.id !== id);
+
+    const index = tempProducts.indexOf(this.getItem(id));
+    const productToRemove = tempProducts[index];
+    productToRemove.inCart = false;
+    productToRemove.count = 0;
+    productToRemove.total = 0;
+
+    this.setState(
+      () => ({
+        cart: [...tempCart],
+        products: [...tempProducts]
+      }),
+      () => this.addTotals()
+    );
   };
 
   clearCart = () => {
-    console.log('cart was cleared');
+    this.setState(
+      () => ({
+        cart: []
+      }),
+      () => {
+        this.setProducts();
+        this.addTotals();
+      }
+    );
+  };
+
+  addTotals = () => {
+    let subTotal = 0;
+    this.state.cart.map(product => (subTotal += product.total));
+
+    const tax = subTotal * 0.1;
+    const parsedTax = parseFloat(tax.toFixed(2));
+
+    const total = subTotal + tax;
+
+    this.setState(() => ({
+      cartSubTotal: subTotal,
+      cartTax: parsedTax,
+      cartTotal: total
+    }));
   };
 
   // Render HOC component that holds the state as props, to provide the values through children components
