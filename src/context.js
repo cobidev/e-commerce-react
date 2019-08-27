@@ -20,6 +20,7 @@ class ProductProvider extends Component {
   componentDidMount = () => {
     this.setProducts();
   };
+
   setProducts = () => {
     let products = [];
     storeProducts.forEach(item => {
@@ -29,24 +30,18 @@ class ProductProvider extends Component {
     this.setState(() => ({ products }));
   };
 
-  getItem = id => {
-    const product = this.state.products.find(product => product.id === id);
-    return product;
-  };
-
   handleDetail = id => {
-    const product = this.getItem(id);
+    const product = this.state.products.find(product => product.id === id);
     this.setState(() => ({ detailProduct: product }));
   };
 
   handleCloseDetail = () => this.setState(() => ({ detailProduct: {} }));
 
   addToCart = id => {
-    const product = this.getItem(id);
+    const product = this.state.products.find(product => product.id === id);
     product.inCart = true;
     product.count++;
-    const price = product.price;
-    product.total = price;
+    product.total = product.price;
 
     this.setState(
       () => ({
@@ -57,7 +52,7 @@ class ProductProvider extends Component {
   };
 
   openModal = id => {
-    const product = this.getItem(id);
+    const product = this.state.products.find(product => product.id === id);
     this.setState(() => ({ modalProduct: product, modalOpen: true }));
   };
 
@@ -70,11 +65,38 @@ class ProductProvider extends Component {
   };
 
   incrementQuantity = id => {
-    console.log('This is increment method');
+    const tempCart = [...this.state.cart];
+    const selectedProduct = tempCart.find(product => product.id === id);
+
+    selectedProduct.count++;
+    selectedProduct.total = selectedProduct.count * selectedProduct.price;
+
+    this.setState(
+      () => ({
+        cart: [...tempCart]
+      }),
+      () => this.addTotals()
+    );
   };
 
   decrementQuantity = id => {
-    console.log('This is decrement method');
+    const tempCart = [...this.state.cart];
+    const selectedProduct = tempCart.find(product => product.id === id);
+
+    selectedProduct.count--;
+
+    if (selectedProduct.count < 1) {
+      return this.removeItem(id);
+    }
+
+    selectedProduct.total = selectedProduct.count * selectedProduct.price;
+
+    this.setState(
+      () => ({
+        cart: [...tempCart]
+      }),
+      () => this.addTotals()
+    );
   };
 
   removeItem = id => {
@@ -83,8 +105,7 @@ class ProductProvider extends Component {
 
     tempCart = tempCart.filter(product => product.id !== id);
 
-    const index = tempProducts.indexOf(this.getItem(id));
-    const productToRemove = tempProducts[index];
+    const productToRemove = tempProducts.find(product => product.id === id);
     productToRemove.inCart = false;
     productToRemove.count = 0;
     productToRemove.total = 0;
