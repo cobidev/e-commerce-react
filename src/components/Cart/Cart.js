@@ -6,7 +6,7 @@ import CartList from './CartList';
 import CartTotals from './CartTotals';
 import { ProductConsumer } from '../../context';
 
-const Cart = () => (
+const Cart = props => (
   <section>
     <Title name="your" title="cart" />
     <ProductConsumer>
@@ -21,7 +21,7 @@ const Cart = () => (
           <>
             <CartColumns />
             <CartList value={value} />
-            <CartTotals value={value} />
+            <CartTotals value={value} history={props.history} />
           </>
         );
       }}
